@@ -5,7 +5,7 @@ import cv2
 
 
 def userTurn():
-    cap = cv2.VideoCapture('http://192.168.1.119:4747/video')
+    cap = cv2.VideoCapture('http://xxx.xxx:4747/video')
     detector = cv2.QRCodeDetector()
     while cap.isOpened():
         frame = cap.read()
