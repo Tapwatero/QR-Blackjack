@@ -32,23 +32,55 @@ values = {
 
 computer_value = 0
 user_value = 0
+computer_turn_num = 0
+user_turn_num = 0
 
 
 def computerTurn():
     global computer_value
-    # Get the first value from the random computer deck and split it into an array.
-    computer_card = computer_deck[0]
-    computer_card = computer_card.split("-")
-    # Get the value of the card from a dict and add to the value of computer
-    computer_card_value = values.get(computer_card[0])
-    computer_value += computer_card_value
+    global computer_turn_num
 
-    # Remove card from deck
-    del computer_deck[0]
+    if computer_turn_num == 0:
+        computer_cards = [computer_deck[0], computer_deck[1]]
 
-    print(
-        f"The computer drew the {computer_card[0].lower().capitalize()} of {computer_card[1].lower().capitalize()}! - (Worth {computer_card_value} Points)")
-    print(f"Computer Value Total: {computer_value}")
+        computer_card_1 = computer_cards[0].split("-")
+        computer_card_2 = computer_cards[1].split("-")
+
+        # Getting the values of the obtained cards
+        computer_card_1_value = values.get(computer_card_1[0])
+        computer_card_2_value = values.get(computer_card_2[0])
+
+        computer_card_values = computer_card_1_value + computer_card_2_value
+
+        # Increase the value of the computer along with increasing the turn number
+        computer_value += computer_card_1_value + computer_card_2_value
+        computer_turn_num += 1
+
+        # Remove cards from deck
+        del computer_deck[0], computer_deck[1]
+
+        print(
+            f"The computer drew the {computer_card_1[0].lower().capitalize()} of {computer_card_1[1].lower().capitalize()} and the {computer_card_2[0].lower().capitalize()} of {computer_card_2[1].lower().capitalize()}! - (Worth {computer_card_values} Points)")
+        print(f"Computer Value Total: {computer_card_values}\n")
+
+    else:
+        # Get the first card from the computer deck
+        computer_card = computer_deck[0]
+        computer_card = computer_card.split("-")
+
+        # Get the value of the card from a dict
+        computer_card_value = values.get(computer_card[0])
+        computer_turn_num += 1
+
+        # Remove card from deck
+        del computer_deck[0]
+
+        # Increase the value of the computer
+        computer_value += computer_card_value
+
+        print(
+            f"The computer drew the {computer_card[0].lower().capitalize()} of {computer_card[1].lower().capitalize()}! - (Worth {computer_card_value} Points)")
+        print(f"Computer Value Total: {computer_value}")
 
 
 def userTurn():
@@ -83,4 +115,4 @@ def userTurn():
 
 
 computerTurn()
-userTurn()
+computerTurn()
