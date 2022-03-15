@@ -85,6 +85,7 @@ def computerTurn():
 
 def userTurn():
     global user_value
+    current_cards = []
 
     # Establish connection to droidcam server (camera) and then init the QRCodeDetector
     cap = cv2.VideoCapture('http://192.168.X.XXX:4747/video')
@@ -93,11 +94,26 @@ def userTurn():
     # Fetch camera frames from droidcam while camera instance is connected.
     while cap.isOpened():
         ret, frame = cap.read()
-        cv2.imshow('frame', frame)
-        # Detect all qr codes in frame and retrieve the data from within
         data, bbox, _ = detector.detectAndDecode(frame)
-        # Check if  there is data (data is true and thus not None)
-        if data:
+
+        if user_turn_num == 0:
+            if data and data in user_deck and len(current_cards) < 2:
+                current_cards.append(data.split("-"))
+                del user_deck[user_deck.index(data)]
+
+                if len(current_cards) == 2:
+                    current_card_1_value = values.get(current_cards[0][0])
+                    current_card_2_value = values.get(current_cards[1][0])
+
+                    current_card_values = current_card_1_value + current_card_2_value
+
+                    user_value += current_card_1_value + current_card_2_value
+
+                    print(
+                        f"The computer drew the {current_cards[0][0].lower().capitalize()} of {current_cards[0][1].lower().capitalize()} and the {current_cards[1][0].lower().capitalize()} of {current_cards[1][1].lower().capitalize()}! - (Worth {current_card_values} Points)")
+                    print(f"Computer Value Total: {user_value}\n")
+                    cap.release()
+        else:
             tmp_card = data
             user_card = data.split("-")
 
@@ -111,8 +127,7 @@ def userTurn():
                 f"The user drew the {user_card[0].lower().capitalize()} of {user_card[1].lower().capitalize()}! - (Worth {user_card_value} Points)")
             print(f"Computer Value Total: {user_value}")
             cap.release()
-            # End connection to droidcam server to prevent further scoring from one turn
 
 
 computerTurn()
-computerTurn()
+userTurn()
